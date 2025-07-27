@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ilteach</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        #chat-container { border: 1px solid #ccc; padding: 1em; max-height: 400px; overflow-y: scroll; margin-bottom: 1em; }
+        .message { margin-bottom: 0.5em; padding: 0.5em; border-radius: 5px; }
+        .user-message { background-color: #e6f3ff; text-align: right; }
+        .bot-message { background-color: #f0f0f0; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>AI Ders Asistanı</h1>
+    
+    <div>
+        <input type="file" id="fileInput" accept=".pdf">
+        <button onclick="uploadFile()">Dosyayı Yükle</button>
+        <p id="status"></p>
+    </div>
+
+    <hr>
+
+    <h2>Sohbet</h2>
+    <div id="chat-container"></div>
+    
+    <input type="text" id="questionInput" placeholder="Sorunuzu buraya yazın..." style="width: 80%;">
+    <button onclick="askQuestion()">Gönder</button>
+
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Lütfen bir dosya seçin.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            document.getElementById('status').innerText = 'Dosya yükleniyor ve işleniyor...';
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').innerText = data.message || data.error;
+            })
+            .catch(error => {
+                document.getElementById('status').innerText = 'Bir hata oluştu: ' + error;
+            });
+        }
+
+        function askQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const question = questionInput.value;
+            if (!question) return;
+
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML += `<div class="message user-message">${question}</div>`;
+            questionInput.value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                chatContainer.innerHTML += `<div class="message bot-message">${data.answer || data.error}</div>`;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            })
+            .catch(error => {
+                chatContainer.innerHTML += `<div class="message bot-message">Hata: ${error}</div>`;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+        }
+    </script>
+</body>
+</html>
