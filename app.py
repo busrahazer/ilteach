@@ -34,6 +34,7 @@ def process_document(file_path):
     chunks = splitter.split_documents(documents)
     return chunks
 
+# --- Create FAISS Vector Store ---
 def get_vector_store(text_chunks):
     print("[DEBUG] get_vector_store started.")
 
@@ -56,3 +57,11 @@ def get_vector_store(text_chunks):
 
     return vector_store
 
+# --- Set up LLM with Retrieval Chain ---
+def get_conversation_chain():
+    global vector_store
+    llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.3)
+    return ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        retriever=vector_store.as_retriever()
+    )
