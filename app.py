@@ -8,6 +8,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_community.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain
+from langchain.schema import Document
+
 
 # --- 1. Load to Environment Variables ---
 load_dotenv()
@@ -30,9 +32,9 @@ chat_history = []
 def process_document(file_path):
     loader = PyPDFLoader(file_path)
     documents = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    chunks = splitter.split_documents(documents)
-    return chunks
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=300)
+    return text_splitter.split_documents(documents)
+
 
 # --- 4. Create FAISS Vector Store ---
 def get_vector_store(text_chunks):
@@ -63,7 +65,7 @@ def get_conversation_chain():
     llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.2)
     return ConversationalRetrievalChain.from_llm(
         llm=llm,
-        retriever=vector_store.as_retriever(kwargs={"k": 5})
+        retriever=vector_store.as_retriever(kwargs={"k": 10})
     )
 # --- 6. Home Page ---
 @app.route('/')
@@ -72,41 +74,64 @@ def index():
 
 # --- 7. File Load and Process ---
 @app.route('/upload', methods=['POST'])
-@app.route('/upload', methods=['POST'])
-def upload_file():
+def upload_files():
     global vector_store, chat_history
 
-    if 'file' not in request.files:
-        print("[ERROR] Dosya yüklenemedi.")
-        return jsonify({'error': 'Dosya yüklenmedi'}), 400
+    if 'files' not in request.files:
+        return jsonify({'error': 'Dosya(lar) yüklenmedi'}), 400
 
-    file = request.files['file']
-    if file.filename == '':
-        print("[ERROR] Dosya adı boş.")
-        return jsonify({'error': 'Dosya seçilmedi'}), 400
+    files = request.files.getlist('files')
+    if not files:
+        return jsonify({'error': 'Hiç dosya seçilmedi'}), 400
 
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
+    uploads_dir = 'uploads'
+    os.makedirs(uploads_dir, exist_ok=True)
 
-    file_path = os.path.join('uploads', file.filename)
-    file.save(file_path)
-    print(f"[DEBUG] Dosya yüklendi: {file_path}")
+    all_docs = []
 
-    try:
-        chunks = process_document(file_path)
-        print(f"[DEBUG] {len(chunks)} metin parçası üretildi.")
+    for file in files:
+        file_path = os.path.join(uploads_dir, file.filename)
+        file.save(file_path)
+        print(f"[DEBUG] Yüklendi: {file.filename}")
 
-        vector_store = get_vector_store(chunks)
-        print(f"[DEBUG] Vektör mağazası başarıyla oluşturuldu.")
+        try:
+            loader = PyPDFLoader(file_path)
+            raw_docs = loader.load()
 
-        chat_history = []
-        os.remove(file_path)
-        print("[DEBUG] Geçici dosya silindi.")
+            file_id = os.path.splitext(file.filename)[0]
+            docs = [
+                Document(page_content=d.page_content, metadata={"source": file_id})
+                for d in raw_docs
+            ]
 
-        return jsonify({'message': 'Dosya başarıyla işlendi.'}), 200
-    except Exception as e:
-        print(f"[ERROR] İşleme hatası: {e}")
-        return jsonify({'error': str(e)}), 500
+            from langchain.text_splitter import RecursiveCharacterTextSplitter
+            splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            split_docs = splitter.split_documents(docs)
+
+            all_docs.extend(split_docs)
+
+            os.remove(file_path)
+        except Exception as e:
+            return jsonify({'error': f"{file.filename} işlenemedi: {str(e)}"}), 500
+
+    if not all_docs:
+        return jsonify({'error': 'Belgelerden içerik elde edilemedi.'}), 500
+
+    print(f"[DEBUG] Toplam {len(all_docs)} yeni parça işleniyor.")
+
+    new_vector_store = get_vector_store(all_docs)
+
+    # Var olan store varsa, yeni gelenle birleştir
+    if vector_store:
+        vector_store.merge_from(new_vector_store)
+        print("[DEBUG] Yeni belgeler mevcut vector store'a eklendi.")
+    else:
+        vector_store = new_vector_store
+        print("[DEBUG] Yeni vector store oluşturuldu.")
+
+    chat_history = []
+
+    return jsonify({'message': f'{len(files)} belge başarıyla yüklendi ve işlendi.'}), 200
 
 # --- 8. Answer and Question Chat API ---
 @app.route('/chat', methods=['POST'])
@@ -118,6 +143,11 @@ def chat():
 
     data = request.get_json()
     question = data.get('question', '')
+    source = data.get('source' , '')
+
+    retriever = vector_store.as_retriever(
+        search_kwargs={"k": 10, "filter": {"source": source}} if source else {"k": 10}
+    )
 
     if not question.strip():
         return jsonify({'error': 'Soru boş olamaz.'}), 400

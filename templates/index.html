@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>ilteach</title>
     <style>
         body { font-family: sans-serif; margin: 2em; }
@@ -16,9 +17,13 @@
     <h1>AI Ders Asistanı</h1>
     
     <div>
-        <input type="file" id="fileInput" accept=".pdf">
-        <button onclick="uploadFile()">Dosyayı Yükle</button>
-        <p id="status"></p>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            <label>PDF Yükle:</label>
+            <input type="file" id="fileInput" name="files" multiple required>
+            <button type="submit">Yükle</button>
+        </form>
+    <div id="uploadedFiles"></div>
+    <ul id="uploadedList" style="margin-top: 1em;"></ul>
     </div>
 
     <hr>
@@ -30,47 +35,64 @@
     <button onclick="askQuestion()">Gönder</button>
 
     <script>
-        function uploadFile() {
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadForm = document.getElementById('uploadForm');
             const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            if (!file) {
-                alert('Lütfen bir dosya seçin.');
-                return;
-            }
+            const uploadedList = document.getElementById('uploadedList');
 
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            document.getElementById('status').innerText = 'Dosya yükleniyor ve işleniyor...';
+            uploadForm.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-            fetch('/upload', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('status').innerText = data.message || data.error;
-            })
-            .catch(error => {
-                document.getElementById('status').innerText = 'Bir hata oluştu: ' + error;
+                const files = fileInput.files;
+                if (!files.length) {
+                    alert('Lütfen en az bir dosya seçin.');
+                    return;
+                }
+
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        // Yüklenen dosya adlarını listeye ekle
+                        for (let i = 0; i < files.length; i++) {
+                            const li = document.createElement('li');
+                            li.textContent = files[i].name;
+                            uploadedList.appendChild(li);
+                        }
+                        alert(data.message);
+                    } else {
+                        alert(data.error || 'Bilinmeyen bir hata oluştu.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Yükleme Hatası:', err);
+                    alert('Yükleme başarısız.');
+                });
             });
-        }
+        });
 
         function askQuestion() {
             const questionInput = document.getElementById('questionInput');
-            const question = questionInput.value;
+            const question = questionInput.value.trim();
+            const chatContainer = document.getElementById('chat-container');
+
             if (!question) return;
 
-            const chatContainer = document.getElementById('chat-container');
             chatContainer.innerHTML += `<div class="message user-message">${question}</div>`;
             questionInput.value = '';
 
             fetch('/chat', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ question: question }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: question })
             })
             .then(response => response.json())
             .then(data => {
@@ -82,6 +104,7 @@
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             });
         }
-    </script>
+</script>
+
 </body>
 </html>
