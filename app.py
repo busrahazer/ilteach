@@ -138,27 +138,30 @@ def upload_files():
 def chat():
     global vector_store, chat_history
 
-    if vector_store is None:
-        return jsonify({'error': 'Önce bir belge yüklemelisiniz.'}), 400
-
     data = request.get_json()
-    question = data.get('question', '')
-    source = data.get('source' , '')
+    question = data.get('question', '').strip()
+    mode = data.get('mode', 'retrieval')
 
-    retriever = vector_store.as_retriever(
-        search_kwargs={"k": 10, "filter": {"source": source}} if source else {"k": 10}
-    )
-
-    if not question.strip():
+    if not question:
         return jsonify({'error': 'Soru boş olamaz.'}), 400
 
     try:
-        chain = get_conversation_chain()
-        result = chain({
-            "question": question,
-            "chat_history": chat_history
-        })
-        answer = result['answer']
+        if mode == 'retrieval':
+            if vector_store is None:
+                return jsonify({'error': 'Önce belge yükleyin.'}), 400
+
+            chain = get_conversation_chain()
+            result = chain({
+                "question": question,
+                "chat_history": chat_history
+            })
+            answer = result['answer']
+        else:
+            # General information mode: no need vector store
+            llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.2)
+            response = llm.invoke(question)
+            answer = response.content
+
         chat_history.append((question, answer))
         return jsonify({'answer': answer}), 200
     except Exception as e:
@@ -166,4 +169,4 @@ def chat():
 
 # --- 9. Start APP ---
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=True)
