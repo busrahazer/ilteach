@@ -70,17 +70,36 @@ function askQuestion() {
   questionInput.value = '';
 
   const mode = document.getElementById('modeRetrieval')?.checked ? 'retrieval' : 'general';
+  const chatContainer = document.getElementById('chat-container');
 
   fetch('/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ question, mode })
   })
-    .then(response => response.json())
+    .then(async response => {
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Sunucu hatası: ${response.status} - ${text}`);
+      }
+      return response.json();
+    })
     .then(data => {
       const answer = data.answer || data.error || "Yanıt alınamadı.";
       appendMessage('bot', answer);
 
+      // AI'a not aldırma kontrolü
+      if (question.toLowerCase().includes('not defterine kaydet')) {
+        const pureNote = answer.split('\n')[0]; // sadece ilk satır not
+        autoSaveNote(pureNote);
+      }
+
+      // Not defterine oto
+      if (question.toLowerCase().includes('not defterine kaydet') && answer) {
+        const pureNote = answer.split('\n')[0];
+        autoSaveNote(pureNote);
+}
+      // Yeni sohbet mi başlatıldı?
       if (!currentChatId) {
         currentChatId = generateChatId();
         const title = question.split(' ').slice(0, 4).join(' ') + '...';
@@ -94,7 +113,7 @@ function askQuestion() {
       localStorage.setItem('lastChatId', currentChatId);
     })
     .catch(error => {
-      appendMessage('bot', `Hata: ${error.message}`);
+      appendMessage('bot', `❌ Hata: ${error.message}`);
     });
 }
 
@@ -126,6 +145,9 @@ function loadChatFromLocal(chatId) {
 
   currentChatId = chatId;
   localStorage.setItem('lastChatId', chatId);
+
+  // Notları da yükle
+  loadNotes(chatId);
 }
 
 function updateChatList() {
@@ -182,4 +204,58 @@ function startNewChat() {
   document.getElementById('chatTitle').textContent = "Yeni Sohbet";
   currentChatId = null;
   localStorage.removeItem('lastChatId');
+}
+
+// Not defteri func.
+function loadNotes(chatId) {
+  const notes = JSON.parse(localStorage.getItem(`notes-${chatId}`)) || [];
+  const noteList = document.getElementById('noteList');
+  noteList.innerHTML = '';
+
+  notes.forEach((note, index) => {
+    const li = document.createElement('li');
+    const textarea = document.createElement('textarea');
+
+    textarea.value = note;
+    textarea.className = 'w-full p-2 border rounded resize-none';
+    textarea.oninput = () => saveNotes(chatId);
+
+    li.appendChild(textarea);
+    noteList.appendChild(li);
+  });
+
+  addEmptyNote(); // her zaman altta boş satır
+}
+
+function saveNotes(chatId) {
+  const noteList = document.querySelectorAll('#noteList textarea');
+  const notes = Array.from(noteList)
+    .map(t => t.value.trim())
+    .filter(t => t !== '');
+
+  localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
+}
+
+function addEmptyNote() {
+  if (!currentChatId) return;
+
+  const noteList = document.getElementById('noteList');
+  const li = document.createElement('li');
+  const textarea = document.createElement('textarea');
+
+  textarea.placeholder = 'Yeni not...';
+  textarea.className = 'w-full p-2 border rounded resize-none';
+  textarea.onblur = () => saveNotes(currentChatId);
+
+  li.appendChild(textarea);
+  noteList.appendChild(li);
+  textarea.focus();
+}
+
+function autoSaveNote(text) {
+  if (!currentChatId) return;
+  const notes = JSON.parse(localStorage.getItem(`notes-${currentChatId}`)) || [];
+  notes.push(text);
+  localStorage.setItem(`notes-${currentChatId}`, JSON.stringify(notes));
+  loadNotes(currentChatId);
 }

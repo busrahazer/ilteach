@@ -69,12 +69,13 @@
 
     <!-- ✅ SAĞ: Not Defteri -->
     <aside class="w-64 bg-white border-l p-4 hidden md:block">
-      <h2 class="font-medium text-lg mb-2">Not Defteri</h2>
-      <ul id="noteList" class="text-sm space-y-2">
-        <li class="text-gray-400">Henüz bir not eklenmedi.</li>
-      </ul>
+      <h2 class="font-medium text-lg mb-2 flex justify-between items-center">
+        Not Defteri
+        <button onclick="addEmptyNote()" title="Yeni Not" class="text-sm bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">+</button>
+      </h2>
+      <ul id="noteList" class="text-sm space-y-2"></ul>
     </aside>
-  </div>
+
 
   <script src="{{ url_for('static', filename='chat.js') }}"></script>
 </body>
