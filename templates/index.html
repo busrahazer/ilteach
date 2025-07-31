@@ -15,7 +15,10 @@
     
     <!-- ✅ SOL: Sohbetler -->
     <aside class="w-64 bg-white border-r p-4 overflow-y-auto">
-      <h2 class="font-medium text-lg mb-2">Sohbetler</h2>
+      <h2 class="font-medium text-lg mb-2 flex justify-between items-center">
+        Sohbetler
+        <button onclick="startNewChat()" title="Yeni Sohbet" class="text-white bg-blue-600 text-sm px-2 py-1 rounded hover:bg-blue-700">+</button>
+      </h2>
       <ul id="chatList" class="space-y-2 text-sm text-gray-700"></ul>
     </aside>
 

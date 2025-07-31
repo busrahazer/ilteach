@@ -176,3 +176,10 @@ function clearChat(silent = false) {
   localStorage.removeItem('lastChatId');
   document.getElementById('chatTitle').textContent = "Yeni Sohbet";
 }
+
+function startNewChat() {
+  clearChat(true); // Mevcut sohbeti sadece arayüzden sil, localStorage’dan silme
+  document.getElementById('chatTitle').textContent = "Yeni Sohbet";
+  currentChatId = null;
+  localStorage.removeItem('lastChatId');
+}
