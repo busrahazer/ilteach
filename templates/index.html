@@ -12,16 +12,16 @@
   </header>
 
   <div class="flex h-screen">
-    <!-- Note Page (ready, but doesn't work yet) -->
-    <aside class="w-64 bg-white border-r p-4 hidden md:block">
-      <h2 class="font-medium text-lg mb-2">Not Defteri</h2>
-      <ul id="noteList" class="text-sm space-y-2">
-        <li class="text-gray-400">Henüz bir not eklenmedi.</li>
-      </ul>
+    
+    <!-- ✅ SOL: Sohbetler -->
+    <aside class="w-64 bg-white border-r p-4 overflow-y-auto">
+      <h2 class="font-medium text-lg mb-2">Sohbetler</h2>
+      <ul id="chatList" class="space-y-2 text-sm text-gray-700"></ul>
     </aside>
 
+    <!-- ✅ ORTA: Ana içerik -->
     <main class="flex-1 flex flex-col">
-      <!-- File load and mode section -->
+      <!-- Dosya yükleme ve mod seçimi -->
       <section class="p-4 bg-white border-b flex flex-col md:flex-row gap-4">
         <form id="uploadForm" enctype="multipart/form-data" class="flex gap-2">
           <input type="file" id="fileInput" name="files" multiple class="file-input file-input-bordered" />
@@ -40,16 +40,22 @@
         </div>
       </section>
 
-      <!-- Loaded document list -->
+      <!-- Başlık ve Sil -->
+      <h2 id="chatTitle" class="text-lg font-semibold px-4 py-2">
+        Yeni Sohbet
+        <button onclick="clearChat()" class="text-red-600 ml-2 text-sm">🗑️ Sil</button>
+      </h2>
+
+      <!-- Yüklenen belgeler -->
       <section class="p-4 bg-gray-50 border-b">
         <h2 class="font-medium text-sm mb-1">Yüklenen Belgeler:</h2>
         <ul id="uploadedFiles" class="text-sm list-disc list-inside text-gray-700"></ul>
       </section>
 
-      <!-- Chat Area -->
+      <!-- Sohbet alanı -->
       <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50"></div>
 
-      <!-- Question Area -->
+      <!-- Soru gönderme -->
       <section class="p-4 bg-white border-t">
         <div class="flex gap-2">
           <input type="text" id="questionInput" class="flex-1 border rounded p-2" placeholder="Sorunuzu yazın..." />
@@ -57,8 +63,16 @@
         </div>
       </section>
     </main>
+
+    <!-- ✅ SAĞ: Not Defteri -->
+    <aside class="w-64 bg-white border-l p-4 hidden md:block">
+      <h2 class="font-medium text-lg mb-2">Not Defteri</h2>
+      <ul id="noteList" class="text-sm space-y-2">
+        <li class="text-gray-400">Henüz bir not eklenmedi.</li>
+      </ul>
+    </aside>
   </div>
 
-  <script src="chat.js"></script>
+  <script src="{{ url_for('static', filename='chat.js') }}"></script>
 </body>
 </html>

@@ -131,7 +131,10 @@ def upload_files():
 
     chat_history = []
 
-    return jsonify({'message': f'{len(files)} belge başarıyla yüklendi ve işlendi.'}), 200
+    return jsonify({
+        'message': f'{len(files)} belge başarıyla yüklendi ve işlendi.',
+        'files': [file.filename for file in files]
+    }), 200
 
 # --- 8. Answer and Question Chat API ---
 @app.route('/chat', methods=['POST'])
@@ -140,7 +143,7 @@ def chat():
 
     data = request.get_json()
     question = data.get('question', '').strip()
-    mode = data.get('mode', 'retrieval')
+    mode = data.get('mode', 'retrieval')  # <== default 'retrieval'
 
     if not question:
         return jsonify({'error': 'Soru boş olamaz.'}), 400
@@ -157,15 +160,17 @@ def chat():
             })
             answer = result['answer']
         else:
-            # General information mode: no need vector store
+            # Genel bilgi modu
             llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.2)
             response = llm.invoke(question)
             answer = response.content
 
         chat_history.append((question, answer))
         return jsonify({'answer': answer}), 200
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'İşlem sırasında hata: {str(e)}'}), 500
+
 
 # --- 9. Start APP ---
 if __name__ == '__main__':
