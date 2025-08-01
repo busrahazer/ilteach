@@ -86,6 +86,87 @@ function smartTitleFromMessage(message) {
   return title;
 }
 
+// Listelenen kaynaklar
+let selectedFiles = []; // her öğe: { file, status: 'pending' | 'uploading' | 'success' | 'error' }
+document.getElementById('fileInput').addEventListener('change', event => {
+  const input = event.target;
+  const files = Array.from(input.files);
+
+  files.forEach(file => {
+    selectedFiles.push({ file, status: 'pending' });
+  });
+
+  updateFileListUI();
+});
+
+document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  for (const entry of selectedFiles) {
+    if (entry.status === 'success') continue; // zaten yüklenmiş
+
+    entry.status = 'uploading';
+    updateFileListUI();
+
+    const formData = new FormData();
+    formData.append('files', entry.file);
+
+    try {
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        entry.status = 'success';
+      } else {
+        entry.status = 'error';
+      }
+    } catch (err) {
+      entry.status = 'error';
+    }
+
+    updateFileListUI();
+  }
+});
+
+function updateFileListUI() {
+  const ul = document.getElementById('uploadedFiles');
+  ul.innerHTML = '';
+
+  selectedFiles.forEach((entry, index) => {
+    const li = document.createElement('li');
+    li.classList.add('flex', 'justify-between', 'items-center');
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = entry.file.name;
+
+    const statusSpan = document.createElement('span');
+    statusSpan.classList.add('text-xs', 'ml-2');
+
+    switch (entry.status) {
+      case 'pending': statusSpan.textContent = '🚫 Yüklenmedi'; break;
+      case 'uploading': statusSpan.textContent = '⏳ Yükleniyor'; break;
+      case 'success': statusSpan.textContent = '✅ Yüklendi'; break;
+      case 'error': statusSpan.textContent = '❌ Hata'; break;
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '❌';
+    removeBtn.classList.add('ml-2', 'text-red-500', 'hover:text-red-700', 'text-sm');
+    removeBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      updateFileListUI();
+    };
+
+    li.appendChild(nameSpan);
+    li.appendChild(statusSpan);
+    li.appendChild(removeBtn);
+    ul.appendChild(li);
+  });
+}
+
+
 // --- Temel fonksiyonlar ---
 // Sohbet başlığı oluşturma fonksiyonu
 function smartTitleFromMessage(message) {
