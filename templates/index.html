@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Ders Asistanı</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/ui.css">
   <style>
     .fade-in {
       animation: fadeIn 0.4s ease-in-out;
@@ -23,13 +24,26 @@
 
   <!-- Ana yapı -->
   <div class="flex h-[calc(100vh-64px)] overflow-hidden">
+
     <!-- SOL: Sohbetler -->
-    <aside class="w-64 bg-white border-r p-4 overflow-y-auto hidden md:block">
-      <h2 class="font-semibold text-lg mb-2 flex justify-between items-center">
-        Sohbetler
-        <button onclick="startNewChat()" title="Yeni Sohbet" class="text-white bg-blue-600 text-sm px-2 py-1 rounded hover:bg-blue-700">+</button>
-      </h2>
-      <ul id="chatList" class="space-y-2 text-sm text-gray-700"></ul>
+    <aside class="left-sidebar sidebar sidebar-expanded transition-all" id="sidebar">
+      <div class="flex flex-col items-center gap-4 py-4">
+        <!-- Aç / Kapat düğmesi -->
+        <button id="toggleSidebar" class="menu-icon">☰</button>
+
+        <!-- Yeni sohbet butonu -->
+        <div class="flex flex-col items-center">
+          <button onclick="startNewChat()" class="menu-icon bg-purple-600 text-white">＋</button>
+          <span class="new-chat-label text-xs mt-1 text-gray-600">Yeni Sohbet</span>
+        </div>
+
+        <!-- Diğer ikonlar (şimdilik işlevsiz) -->
+        <button class="menu-icon">📁</button>
+        <button class="menu-icon">⚙️</button>
+      </div>
+
+      <!-- Sohbet listesi sadece genişken görünsün -->
+      <ul id="chatList" class="px-4 space-y-2 text-sm text-gray-700"></ul>
     </aside>
 
     <!-- ORTA: Ana içerik -->
@@ -80,15 +94,18 @@
       </section>
     </main>
 
+    <button id="toggleNotes" class="absolute top-4 right-4 text-sm bg-gray-200 px-3 py-1 rounded">📝</button>
+
     <!-- SAĞ: Not Defteri -->
-    <aside class="w-64 bg-white border-l p-4 overflow-y-auto hidden md:flex flex-col">
+    <aside id="notesPanel" class="notes-panel hidden">
       <h2 class="font-semibold text-lg mb-2 flex justify-between items-center">
         Not Defteri
-        <button onclick="addEmptyNote()" title="Yeni Not" class="text-sm bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">+</button>
+        <button onclick="addEmptyNote()" class="text-sm bg-blue-500 text-white px-2 py-1 rounded">＋</button>
       </h2>
       <div id="noteList" class="flex flex-col-reverse gap-2 text-sm text-gray-700"></div>
     </aside>
   </div>
   <script src="/static/chat.js" defer></script>
+  <script src="/static/ui.js" defer></script>
 </body>
 </html>
