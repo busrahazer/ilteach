@@ -171,7 +171,33 @@ def chat():
     except Exception as e:
         return jsonify({'error': f'İşlem sırasında hata: {str(e)}'}), 500
 
+# --- 9. Chat Name ---
+@app.route('/generate-title', methods=['POST'])
+def generate_title():
+    data = request.get_json()
+    question = data.get('question', '').strip()
+    answer = data.get('answer', '').strip()
 
-# --- 9. Start APP ---
+    if not question or not answer:
+        return jsonify({'error': 'Soru ve cevap gerekli.'}), 400
+
+    try:
+        prompt = f"""Aşağıdaki soru-cevap etkileşimine göre sohbeti temsil eden kısa ve öz bir başlık üret:
+
+        Soru: {question}
+        Cevap: {answer}
+
+        Başlık (5-8 kelime):"""
+
+        llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.4)
+        response = llm.invoke(prompt)
+        title = response.content.strip().replace('"', '')
+
+        return jsonify({'title': title}), 200
+
+    except Exception as e:
+        return jsonify({'error': f'Başlık oluşturulurken hata: {str(e)}'}), 500
+
+# --- 10. Start APP ---
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
