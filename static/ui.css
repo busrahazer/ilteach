@@ -1,103 +1,227 @@
-/* === Genel Temalar ve Geçişler === */
-.hidden {
-  display: none !important;
+/* === Genel Temalar === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ececa3;
+  color: #333;
 }
 
-.transition-all {
+header.header {
+  background: linear-gradient(to right, #abc32f, #b5e550);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+/* === Sidebar === */
+.sidebar {
+  background: white;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
   transition: all 0.3s ease;
 }
 
-.side-toggle {
-  width: 60px;
-}
-
-.sidebar-expanded {
+.left-sidebar {
   width: 250px;
 }
 
-.sidebar {
-  background: white;
-  border-right: 1px solid #ddd;
-  height: 100%;
-  overflow-y: auto;
-}
-
-/* === Sol Menü (ikonlar) === */
-.menu-icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 48px;
-  width: 48px;
-  margin: auto;
-  font-size: 1.25rem;
-  border-radius: 9999px;
-  transition: background 0.2s;
-}
-
-.menu-icon:hover {
-  background: #f3f4f6;
-}
-
-/* === Sidebar genişken sohbet listesi ve yazılar görünsün === */
-.left-sidebar:not(.sidebar-expanded) #chatList,
-.left-sidebar:not(.sidebar-expanded) .label-text {
-  display: none;
-}
-
-/* === Yeni Sohbet metni sadece genişken görünür === */
-.left-sidebar.sidebar-expanded .new-chat-label {
-  display: inline-block;
-}
+.left-sidebar:not(.sidebar-expanded) .chat-list,
 .left-sidebar:not(.sidebar-expanded) .new-chat-label {
   display: none;
 }
 
-/* === Giriş Ekranı Logo ve Karşılama === */
-#startPrompt {
+.sidebar-buttons {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  color: #6b7280;
+  gap: 0.75rem;
+  padding: 1rem 0;
+}
+
+.menu-icon {
+  width: 44px;
+  height: 44px;
+  background: #b5e550;
+  color: #333;
   font-size: 1.25rem;
-  height: 100%;
-  gap: 1rem;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-/* === Chat kutusu & dosya yükleme alanı === */
-#chat-container {
-  overflow-y: auto;
+.menu-icon:hover {
+  background: #abc32f;
+}
+
+.new-chat-label {
+  font-size: 0.75rem;
+  color: #607c3c;
+}
+
+.chat-list {
+  list-style: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* === Ana içerik === */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-select {
+  background: #fff;
   padding: 1rem;
-  background: #f0fdf4;;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  gap: 2rem;
+  font-size: 0.95rem;
+  color: #333;
 }
 
-#chatTitle {
+.chat-title {
   font-size: 1.25rem;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #ddd;
-  background: #fff;
-  font-weight: 600;
-}
-
-/* === Dosya listesi === */
-#uploadedFiles li {
+  background: #f0fdf4;
+  border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
-  padding: 0.25rem 0;
-  font-size: 0.875rem;
+  align-items: center;
+  color: #607c3c;
 }
 
-/* === Sağ Panel Notlar === */
-.notes-panel {
-  transition: transform 0.3s ease;
-  width: 250px;
-  background: white;
-  border-left: 1px solid #ddd;
+.chat-container {
+  flex: 1;
   padding: 1rem;
+  overflow-y: auto;
+  background: #f6fdeb;
+}
+
+.start-prompt {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #808080;
+}
+
+/* === Interaction Panel === */
+.interaction-panel {
+  background: #fff;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.input-row input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#askButton {
+  background-color: #809c13;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#askButton:hover {
+  background-color: #607c3c;
+}
+
+.upload-icon {
+  background: #ececa3;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-icon input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploaded-list {
+  padding-left: 1.25rem;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.upload-btn {
+  background-color: #abc32f;
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.upload-btn:hover {
+  background-color: #809c13;
+}
+
+/* === Not Defteri === */
+.notes-panel {
+  width: 250px;
+  background: #f6fdeb;
+  padding: 1rem;
+  border-left: 1px solid #ccc;
+  transition: transform 0.3s ease;
 }
 
 .notes-panel.hidden {
   transform: translateX(100%);
 }
 
+.note-list textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+  resize: none;
+  margin-bottom: 0.5rem;
+}
+
+.notes-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #ececa3;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.notes-toggle:hover {
+  background: #b5e550;
+}
