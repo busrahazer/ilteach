@@ -345,6 +345,7 @@ window.startNewChat = function () {
   currentChatId = null;
   localStorage.removeItem('lastChatId');
   showStartPrompt();
+  updateChatList();
 };
 
 // --- Not Defteri ---
