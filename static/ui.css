@@ -27,7 +27,11 @@ header.header {
   background: white;
   border-right: 1px solid #ccc;
   overflow-y: auto;
+  overflow-x: hidden;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .left-sidebar {
@@ -39,28 +43,31 @@ header.header {
   width: 250px;
 }
 
-.left-sidebar .menu-label {
-  display: none;
-  margin-left: 0.5rem;
-  white-space: nowrap;
-  color: #607c3c;
-}
-
-.left-sidebar.sidebar-expanded .menu-label {
-  display: inline;
-}
-
-.left-sidebar:not(.sidebar-expanded) .chat-list,
-.left-sidebar:not(.sidebar-expanded) .new-chat-label {
-  display: none;
-}
-
 .sidebar-buttons {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;;
+  margin-bottom: 0.25rem;
+}
+
+/* Menü itemleri */
+.menu-group {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 0;
+  gap: 1rem;
+  padding-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .menu-icon {
@@ -79,15 +86,94 @@ header.header {
   background: #abc32f;
 }
 
-.new-chat-label {
-  font-size: 0.75rem;
+.menu-label {
+  display: none;
   color: #607c3c;
+  font-size: 1.1rem;
+}
+
+.left-sidebar.sidebar-expanded .menu-label {
+  display: inline;
+}
+
+/* Toggle ikonu */
+.toggle-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem;
+}
+
+.toggle-icon {
+  background: transparent !important;
+  color: #607c3c !important;      
+  box-shadow: none !important;       
+  border: none;                       
+}
+
+/* Sohbet listesi */
+.chat-header {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #607c3c;
+  opacity: 0.6;
+  padding: 0.25rem 1rem 0.25rem 1rem;
+  margin: 0; 
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
 }
 
 .chat-list {
   list-style: none;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0 1rem 1rem;
   font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.chat-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.chat-list li:hover {
+  background: #e6f7d9;
+}
+
+.chat-list button {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  flex: 1;
+  text-align: left;
+}
+
+.chat-list button:hover {
+  text-decoration: underline;
+}
+
+/* Kullanıcı görünümü en altta */
+.user-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  padding: 0.6rem;
+}
+
+.left-sidebar:not(.sidebar-expanded) .menu-label,
+.left-sidebar:not(.sidebar-expanded) .chat-list,
+.left-sidebar:not(.sidebar-expanded) .new-chat-label,
+.left-sidebar:not(.sidebar-expanded) .chat-header {
+  display: none;
 }
 
 /* === Ana içerik === */

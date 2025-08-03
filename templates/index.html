@@ -26,19 +26,34 @@
     <!-- SOL: Sohbetler -->
     <aside class="left-sidebar sidebar sidebar transition-all" id="sidebar">
       <div class="sidebar-buttons">
-        <button id="toggleSidebar" class="menu-icon">☰</button>
-        <div class="flex flex-col items-center">
-          <button onclick="startNewChat()" class="menu-icon">＋</button>
-          <span class="new-chat-label">Yeni Sohbet</span>
-        <div class="flex items-center">
-          <button class="menu-icon">📁</button>
-          <span class="menu-label">Dosyalar</span>
+            <!-- Sidebar toggle en sağda ve farklı -->
+        <div class="toggle-wrapper">
+          <button id="toggleSidebar" class="menu-icon toggle-icon">☰</button>
         </div>
-        <div class="flex items-center">
-          <button class="menu-icon">⚙️</button>
-          <span class="menu-label">Ayarlar</span>
+        <!-- Menü ikonları -->
+        <div class="menu-group">
+          <div class="menu-item">
+            <button onclick="startNewChat()" class="menu-icon">＋</button>
+            <span class="menu-label new-chat-label">Yeni Sohbet</span>
+          </div>
+          <div class="menu-item">
+            <button class="menu-icon">📁</button>
+            <span class="menu-label">Dosyalar</span>
+          </div>
+          <div class="menu-item">
+            <button class="menu-icon">⚙️</button>
+            <span class="menu-label">Ayarlar</span>
+          </div>
         </div>
+      </div>
+      <!-- Sohbet listesi -->
+      <h3 class="chat-header">Sohbetler</h3>
       <ul id="chatList" class="chat-list"></ul>
+      <!-- Kullanıcı -->
+      <div class="user-section">
+        <button class="menu-icon">👤</button>
+        <span class="menu-label">busra</span>
+      </div>
     </aside>
 
     <!-- ORTA: Ana içerik -->
