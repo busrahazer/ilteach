@@ -31,7 +31,23 @@ header.header {
 }
 
 .left-sidebar {
+  width: 60px;
+  transition: width 0.3s ease;
+}
+
+.left-sidebar.sidebar-expanded {
   width: 250px;
+}
+
+.left-sidebar .menu-label {
+  display: none;
+  margin-left: 0.5rem;
+  white-space: nowrap;
+  color: #607c3c;
+}
+
+.left-sidebar.sidebar-expanded .menu-label {
+  display: inline;
 }
 
 .left-sidebar:not(.sidebar-expanded) .chat-list,
@@ -107,6 +123,8 @@ header.header {
   padding: 1rem;
   overflow-y: auto;
   background: #f6fdeb;
+  display: flex;
+  flex-direction: column;
 }
 
 .start-prompt {
@@ -185,6 +203,26 @@ header.header {
 
 .upload-btn:hover {
   background-color: #809c13;
+}
+
+.message-user {
+  background-color: #b5e550;
+  align-self: flex-end;
+  padding: 0.75rem;
+  border-radius: 12px;
+  max-width: 70%;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.message-bot {
+  background-color: #f0fdf4;
+  align-self: flex-start;
+  padding: 0.75rem;
+  border-radius: 12px;
+  max-width: 70%;
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
 /* === Not Defteri === */

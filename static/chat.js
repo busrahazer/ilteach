@@ -177,6 +177,14 @@ function smartTitleFromMessage(message) {
   return title;
 }
 
+function appendMessage(role, text) {
+  const div = document.createElement('div');
+  div.className = `message-${role}`;
+  div.textContent = text;
+  document.getElementById('chat-container').appendChild(div);
+  document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
+}
+
 // askQuestion fonksiyonu içinde, cevap geldikten sonra başlığı güncelle
 window.askQuestion = function () {
   const questionInput = document.getElementById('questionInput');
