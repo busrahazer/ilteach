@@ -403,17 +403,21 @@ function startCustomPomodoro() {
 function closePomodoroWidget() {
   const widget = document.getElementById('pomodoroWidget');
   if (widget) {
-    widget.style.display = 'none'; 
+    widget.classList.add('hidden');
   }
 }
 
 function togglePomodoroWidget() {
   const widget = document.getElementById('pomodoroWidget');
-  if (widget.style.display === 'none' || widget.classList.contains('hidden')) {
-    widget.style.display = 'flex';
-    startCustomPomodoro(); 
+
+  if (!widget) return;
+
+  const isVisible = !widget.classList.contains('hidden');
+
+  if (isVisible) {
+    widget.classList.add('hidden');
   } else {
-    closePomodoroWidget();
+    widget.classList.remove('hidden');
   }
 }
 

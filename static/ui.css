@@ -411,6 +411,10 @@ header.header {
   flex-direction: column;
 }
 
+.pomodoro-floating.hidden {
+  display: none;
+}
+
 .pomodoro-header {
   display: flex;
   justify-content: space-between;
