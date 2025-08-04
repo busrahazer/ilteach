@@ -371,3 +371,75 @@ function autoSaveNote(text) {
   localStorage.setItem(`notes-${currentChatId}`, JSON.stringify(notes));
   loadNotes(currentChatId);
 }
+
+// Pomodoro widget
+let customTimer = null;
+
+function startCustomPomodoro() {
+  const duration = parseInt(document.getElementById('pomodoroDuration').value);
+  let timeLeft = duration;
+  const display = document.getElementById('pomodoroTimer');
+
+  clearInterval(customTimer);
+
+  function updateDisplay() {
+    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+    const seconds = String(timeLeft % 60).padStart(2, '0');
+    display.textContent = `${minutes}:${seconds}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(customTimer);
+      display.textContent = 'Bitti!';
+      // Optional: play sound here
+    }
+
+    timeLeft--;
+  }
+
+  updateDisplay();
+  customTimer = setInterval(updateDisplay, 1000);
+}
+
+function closePomodoroWidget() {
+  const widget = document.getElementById('pomodoroWidget');
+  if (widget) {
+    widget.style.display = 'none'; 
+  }
+}
+
+function togglePomodoroWidget() {
+  const widget = document.getElementById('pomodoroWidget');
+  if (widget.style.display === 'none' || widget.classList.contains('hidden')) {
+    widget.style.display = 'flex';
+    startCustomPomodoro(); 
+  } else {
+    closePomodoroWidget();
+  }
+}
+
+// Draggable widget
+document.addEventListener('DOMContentLoaded', () => {
+  const widget = document.getElementById('pomodoroWidget');
+  const header = widget.querySelector('.pomodoro-header');
+  let isDragging = false, offsetX = 0, offsetY = 0;
+
+  header.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - widget.offsetLeft;
+    offsetY = e.clientY - widget.offsetTop;
+    widget.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    widget.style.left = `${e.clientX - offsetX}px`;
+    widget.style.top = `${e.clientY - offsetY}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    widget.style.cursor = 'default';
+  });
+});
+
+

@@ -293,12 +293,12 @@ header.header {
 }
 
 .uploaded-list li {
-  margin-bottom: 0.3rem;  /* Satırlar arası boşluk */
+  margin-bottom: 0.3rem;  
   font-size: 0.9rem;
 }
 
 .uploaded-list li span {
-  margin-right: 0.4rem;  /* Emoji ile yazı arası boşluk */
+  margin-right: 0.4rem;  
 }
 
 .uploaded-list li button {
@@ -395,3 +395,51 @@ header.header {
 .notes-toggle:hover {
   background: #b5e550;
 }
+
+/* === Pomodoro Widget === */
+.pomodoro-floating {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  width: 280px;
+  height: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.pomodoro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0fdf4;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #ccc;
+  cursor: move;
+  font-weight: bold;
+}
+
+.pomodoro-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pomodoro-select {
+  margin-bottom: 1rem;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pomodoro-timer {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #2563eb;
+}
+

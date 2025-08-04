@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Ders Asistanı</title>
+  <title>ILTEACH</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='img-icon/logo.ico') }}" type="image/x-icon">
   <link rel="stylesheet" href="/static/ui.css">
   <style>
@@ -36,6 +36,10 @@
           <div class="menu-item">
             <button onclick="startNewChat()" class="menu-icon">＋</button>
             <span class="menu-label new-chat-label">Yeni Sohbet</span>
+          </div>
+          <div class="menu-item">
+            <button onclick="togglePomodoroWidget()" class="menu-icon">🍅</button>
+            <span class="menu-label">Pomodoro</span>
           </div>
           <div class="menu-item">
             <button class="menu-icon">📁</button>
@@ -107,6 +111,23 @@
   </div>
 
   <button id="toggleNotes" class="notes-toggle">📝</button>
+
+  <!--- POMODORO WIDGET --->
+  <div id="pomodoroWidget" class="pomodoro-floating hidden">
+    <div class="pomodoro-header">
+      <span>Pomodoro Zamanlayıcı</span>
+      <button onclick="closePomodoroWidget()">✖</button>
+    </div>
+    <div class="pomodoro-body">
+      <select id="pomodoroDuration" class="pomodoro-select">
+        <option value="1500">25 dakika</option>
+        <option value="300">5 dakika</option>
+        <option value="600">10 dakika</option>
+      </select>
+      <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
+      <button onclick="startCustomPomodoro()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm mt-2">Başlat</button>
+    </div>
+  </div>
 
   <script src="/static/chat.js" defer></script>
   <script src="/static/ui.js" defer></script>
