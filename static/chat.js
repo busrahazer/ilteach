@@ -130,43 +130,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
   }
 });
 
-function updateFileListUI() {
-  const ul = document.getElementById('uploadedFiles');
-  ul.innerHTML = '';
-
-  selectedFiles.forEach((entry, index) => {
-    const li = document.createElement('li');
-    li.classList.add('flex', 'justify-between', 'items-center');
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = entry.file.name;
-
-    const statusSpan = document.createElement('span');
-    statusSpan.classList.add('text-xs', 'ml-2');
-
-    switch (entry.status) {
-      case 'pending': statusSpan.textContent = '🚫 Yüklenmedi'; break;
-      case 'uploading': statusSpan.textContent = '⏳ Yükleniyor'; break;
-      case 'success': statusSpan.textContent = '✅ Yüklendi'; break;
-      case 'error': statusSpan.textContent = '❌ Hata'; break;
-    }
-
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = '❌';
-    removeBtn.classList.add('ml-2', 'text-red-500', 'hover:text-red-700', 'text-sm');
-    removeBtn.onclick = () => {
-      selectedFiles.splice(index, 1);
-      updateFileListUI();
-    };
-
-    li.appendChild(nameSpan);
-    li.appendChild(statusSpan);
-    li.appendChild(removeBtn);
-    ul.appendChild(li);
-  });
-}
-
-
+  
 // --- Temel fonksiyonlar ---
 // Sohbet başlığı oluşturma fonksiyonu
 function smartTitleFromMessage(message) {
@@ -178,11 +142,15 @@ function smartTitleFromMessage(message) {
 }
 
 function appendMessage(role, text) {
-  const div = document.createElement('div');
-  div.className = `message-${role}`;
-  div.textContent = text;
-  document.getElementById('chat-container').appendChild(div);
-  document.getElementById('chat-container').scrollTop = document.getElementById('chat-container').scrollHeight;
+  const container = document.getElementById('chat-container');
+
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('message', `message-${role}`);
+  wrapper.textContent = text;
+  wrapper.innerHTML = text.replace(/\n/g, "<br>");
+
+  container.appendChild(wrapper);
+  container.scrollTop = container.scrollHeight;
 }
 
 // askQuestion fonksiyonu içinde, cevap geldikten sonra başlığı güncelle
@@ -248,15 +216,6 @@ window.askQuestion = function () {
       localStorage.setItem('lastChatId', currentChatId);
       loadNotes(currentChatId);
     })
-};
-
-window.appendMessage = function (role, text) {
-  const div = document.createElement('div');
-  div.className = `p-2 rounded max-w-[75%] ${role === 'user' ? 'ml-auto bg-blue-100 text-right' : 'bg-gray-200 text-left'}`;
-  div.textContent = text;
-  const container = document.getElementById('chat-container');
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
 };
 
 function generateChatId() {

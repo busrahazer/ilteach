@@ -58,11 +58,6 @@
 
     <!-- ORTA: Ana içerik -->
     <main class="main">
-      <!-- Mod seçimi -->
-      <section class="mode-select">
-        <label><input id="modeRetrieval" type="radio" name="mode" checked /> Kaynaklarımı Kullan</label>
-        <label><input id="modeGeneral" type="radio" name="mode" /> Genel Bilgi Yaklaşımı</label>
-      </section>
 
       <!-- Başlık -->
       <h2 id="chatTitle" class="chat-title">
@@ -71,7 +66,7 @@
       </h2>
 
       <!-- Mesajlar -->
-      <div id="chat-container" class="chat-container fade-in"></div>
+      <div id="chat-container" class="chat-container p-4 flex flex-col space-y-2 overflow-y-auto h-full"></div>
 
       <!-- Başlangıç mesajı -->
       <div id="startPrompt" class="start-prompt">Bugün ne çalışmak istersin?</div>
@@ -92,6 +87,11 @@
 
           <button type="submit" class="upload-btn">Yükle</button>
         </form>
+      </section>
+      <!-- Mod seçimi -->
+      <section class="mode-select">
+        <label><input id="modeRetrieval" type="radio" name="mode" checked /> Kaynaklarımı Kullan</label>
+        <label><input id="modeGeneral" type="radio" name="mode" /> Genel Bilgi Yaklaşımı</label>
       </section>
     </main>
 
