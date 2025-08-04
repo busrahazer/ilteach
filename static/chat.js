@@ -316,7 +316,6 @@ window.startNewChat = function () {
 };
 
 // --- Not Defteri ---
-
 window.loadNotes = function (chatId) {
   const notes = JSON.parse(localStorage.getItem(`notes-${chatId}`)) || [];
   const noteList = document.getElementById('noteList');
@@ -324,27 +323,47 @@ window.loadNotes = function (chatId) {
 
   notes.forEach((note, index) => {
     const div = document.createElement('div');
-    div.className = 'border p-2 rounded bg-yellow-100 relative';
+    div.className = 'bg-white border border-gray-200 rounded p-3 shadow-sm relative';
 
-    const textarea = document.createElement('textarea');
-    textarea.value = note;
-    textarea.className = 'w-full resize-none bg-yellow-100 border-none focus:outline-none';
-    textarea.rows = 2;
-    textarea.addEventListener('input', () => {
-      notes[index] = textarea.value;
+    // Başlık alanı
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.value = note.title || '';
+    titleInput.className = 'note-title w-full font-semibold text-gray-800 mb-1';
+    titleInput.placeholder = 'Başlık';
+    titleInput.addEventListener('input', () => {
+      notes[index].title = titleInput.value;
       localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
     });
 
+    // Zaman bilgisi
+    const time = document.createElement('div');
+    time.textContent = new Date(note.created).toLocaleString('tr-TR');
+    time.className = 'text-xs text-gray-500 mb-1';
+
+    // İçerik alanı
+    const textarea = document.createElement('textarea');
+    textarea.value = note.content || '';
+    textarea.className = 'note-content w-full resize-none text-sm';
+    textarea.rows = 3;
+    textarea.addEventListener('input', () => {
+      notes[index].content = textarea.value;
+      localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
+    });
+
+    // Silme butonu
     const delBtn = document.createElement('button');
     delBtn.textContent = '✖';
     delBtn.title = 'Notu Sil';
-    delBtn.className = 'absolute top-1 right-1 text-red-600';
+    delBtn.className = 'absolute top-1 right-1 text-red-600 text-sm';
     delBtn.onclick = () => {
       notes.splice(index, 1);
       localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
       loadNotes(chatId);
     };
 
+    div.appendChild(titleInput);
+    div.appendChild(time);
     div.appendChild(textarea);
     div.appendChild(delBtn);
     noteList.appendChild(div);
@@ -353,8 +372,11 @@ window.loadNotes = function (chatId) {
 
 window.addEmptyNote = function () {
   if (!currentChatId) return alert('Lütfen önce bir sohbet başlatın.');
+
   const notes = JSON.parse(localStorage.getItem(`notes-${currentChatId}`)) || [];
-  notes.push('');
+  const timestamp = new Date().toISOString();
+  notes.push({ title: '', content: '', created: timestamp });
+
   localStorage.setItem(`notes-${currentChatId}`, JSON.stringify(notes));
   loadNotes(currentChatId);
 };

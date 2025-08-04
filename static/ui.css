@@ -1,19 +1,21 @@
-/* === Genel Temalar === */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f4e0;
-  color: #333;
+/* === Genel Temalar ve Değişkenler === */
+:root {
+    --primary-color: #7c3aed; /* Referans görseldeki ana mor renk */
+    --primary-color-light: #f5f3ff; /* Mor rengin çok açık tonu */
+    --background-color: #f7f8fc;  /* Ana arka plan rengi */
+    --panel-bg: #ffffff; /* Kenar çubuğu, panel vb. arka planı */
+    --text-color-dark: #111827; /* Koyu metin */
+    --text-color-light: #6b7280; /* Açık, ikincil metin */
+    --border-color: #e5e7eb; /* İnce ve soft kenarlıklar */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Yumuşak gölge */
 }
 
-header.header {
-  background: linear-gradient(to right, #abc32f, #b5e550);
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  font-size: 1.75rem;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* === Temel Sayfa Ayarları === */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color-dark);
 }
 
 .container {
@@ -22,10 +24,22 @@ header.header {
   overflow: hidden;
 }
 
-/* === Sidebar === */
+header.header {
+  background: var(--panel-bg);
+  color: var(--text-color-dark);
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  height: 64px;
+  box-sizing: border-box;
+}
+
+/* === Sol Kenar Çubuğu (Sidebar) === */
 .sidebar {
-  background: white;
-  border-right: 1px solid #ccc;
+  background: var(--panel-bg);
+  border-right: 1px solid var(--border-color);
   overflow-y: auto;
   overflow-x: hidden;
   transition: all 0.3s ease;
@@ -35,7 +49,7 @@ header.header {
 }
 
 .left-sidebar {
-  width: 60px;
+  width: 80px;
   transition: width 0.3s ease;
 }
 
@@ -44,406 +58,516 @@ header.header {
 }
 
 .sidebar-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 1rem 0;;
-  margin-bottom: 0.25rem;
+  padding-top: 1.5rem;
 }
 
-/* Menü itemleri */
 .menu-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding-left: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 1.5rem;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.5rem;
+  gap: 1rem;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0 28px;
+  box-sizing: border-box;
 }
 
 .menu-icon {
   width: 44px;
   height: 44px;
-  background: #b5e550;
-  color: #333;
+  background: transparent;
+  color: var(--text-color-light);
   font-size: 1.25rem;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: color 0.3s, background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-icon:hover {
-  background: #abc32f;
+  color: var(--primary-color);
+  background-color: var(--primary-color-light);
 }
 
 .menu-label {
   display: none;
-  color: #607c3c;
-  font-size: 1.1rem;
+  color: var(--text-color-dark);
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .left-sidebar.sidebar-expanded .menu-label {
   display: inline;
 }
 
-/* Toggle ikonu */
 .toggle-wrapper {
   display: flex;
-  justify-content: flex-end;
-  padding: 0 1rem;
+  justify-content: flex-start;
+  padding: 0 1rem 1rem 28px;
 }
 
 .toggle-icon {
-  background: transparent !important;
-  color: #607c3c !important;      
-  box-shadow: none !important;       
-  border: none;                       
+  color: var(--text-color-dark);
 }
 
-/* Sohbet listesi */
 .chat-header {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #607c3c;
-  opacity: 0.6;
-  padding: 0.25rem 1rem 0.25rem 1rem;
-  margin: 0; 
-  line-height: 1.2;
-  margin-bottom: 0.25rem;
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem 28px 0.5rem 28px;
 }
 
 .chat-list {
   list-style: none;
-  padding: 0.25rem 0 1rem 1rem;
-  font-size: 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  padding: 0 1rem 1rem 20px;
   margin: 0;
 }
 
 .chat-list li {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background: #f0fdf4;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
   transition: background 0.2s;
 }
 
 .chat-list li:hover {
-  background: #e6f7d9;
+  background: var(--primary-color-light);
 }
 
 .chat-list button {
   background: none;
   border: none;
   font-size: 0.9rem;
-  color: #333;
+  color: var(--text-color-dark);
   cursor: pointer;
-  flex: 1;
+  width: 100%;
   text-align: left;
 }
 
-.chat-list button:hover {
-  text-decoration: underline;
-}
-
-/* Kullanıcı görünümü en altta */
 .user-section {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.6rem;
-  padding: 0.6rem;
+  padding: 1.5rem 0;
 }
-
-.left-sidebar:not(.sidebar-expanded) .menu-label,
+.left-sidebar:not(.sidebar-expanded) .chat-header,
 .left-sidebar:not(.sidebar-expanded) .chat-list,
-.left-sidebar:not(.sidebar-expanded) .new-chat-label,
-.left-sidebar:not(.sidebar-expanded) .chat-header {
-  display: none;
+.left-sidebar:not(.sidebar-expanded) .menu-label {
+    display: none;
 }
 
-/* === Ana içerik === */
+/* === Ana İçerik Alanı === */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.mode-select {
-  background: #fff;
-  padding: 1rem;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  gap: 2rem;
-  font-size: 0.95rem;
-  color: #333;
-}
-
 .chat-title {
-  font-size: 1.25rem;
-  padding: 0.75rem 1rem;
-  background: #f0fdf4;
-  border-bottom: 1px solid #ccc;
+  font-size: 1.1rem;
+  padding: 0 2rem;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #607c3c;
+  color: var(--text-color-dark);
+  font-weight: 600;
+  height: 60px;
+}
+.chat-title button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-light);
+  transition: color 0.2s;
+}
+.chat-title button:hover {
+  color: #dc3545; /* Kırmızı */
 }
 
 .chat-container {
   flex: 1;
-  padding: 1rem;
+  padding: 2em;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.fade-in {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  gap: 1.5rem;
 }
 
 .start-prompt {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+}
+.start-prompt h1 {
   font-size: 2.0rem;
-  font-style: italic;
-  color: #808080;
-  text-align: center;
+  color: var(--text-color-dark);
+  margin: 0;
+}
+.start-prompt p {
+    font-size: 1rem;
+    color: var(--text-color-light);
+    margin: 0;
 }
 
-/* === Interaction Panel === */
+.message {
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  max-width: 70%;
+  word-wrap: break-word;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.message-user {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.message-bot {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  align-self: flex-start;
+  color: var(--text-color-dark);
+  border-top-left-radius: 2px;
+}
+
+/* === Giriş Paneli (Alttaki) === */
 .interaction-panel {
-  background: #fff;
-  padding: 1rem;
-  border-top: 1px solid #ccc;
+  background: var(--panel-bg);
+  padding: 1rem 2rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .input-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   align-items: center;
-  margin-bottom: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem;
+  transition: box-shadow 0.2s;
+}
+.input-row:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-color-light);
 }
 
 .input-row input[type="text"] {
   flex: 1;
-  padding: 0.35rem 0.5rem;
-  font-size: 1.0rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: none;
+  background: transparent;
+  outline: none;
 }
 
 #askButton {
-  background-color: #809c13;
+  background-color: var(--primary-color);
   color: white;
-  padding: 0.35rem 0.75rem;
+  padding: 0.6rem 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
   transition: background 0.3s;
 }
-
 #askButton:hover {
-  background-color: #607c3c;
+  opacity: 0.9;
+}
+.upload-icon {
+  padding: 0.5rem;
+  cursor: pointer;
+  position: relative;
+  color: var(--text-color-light);
+  transition: color 0.2s;
+}
+.upload-icon:hover {
+    color: var(--primary-color);
+}
+.upload-icon input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
 }
 
 .upload-icon {
-  background: #ececa3;
   padding: 0.5rem;
-  border-radius: 4px;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  color: var(--text-color-light);
+  transition: color 0.2s;
+}
+.upload-icon:hover {
+    color: var(--primary-color);
+}
+.upload-icon input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
 }
 
-.upload-icon input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
+/* === Yüklenen Dosyalar Listesi === */
+.file-upload-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  min-height: 38px; 
 }
 
 .uploaded-list {
-  padding-left: 1.25rem;
-  font-size: 0.85rem;
-  color: #333;
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; 
 }
 
 .uploaded-list li {
-  margin-bottom: 0.3rem;  
-  font-size: 0.9rem;
-}
-
-.uploaded-list li span {
-  margin-right: 0.4rem;  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
 .uploaded-list li button {
-  font-size: 0.9rem;
+  background: none;
   border: none;
-  background: transparent;
+  padding: 0;
   cursor: pointer;
-  color: #666;
+  color: var(--primary-color);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  line-height: 1;
 }
-
 .uploaded-list li button:hover {
-  color: #d33;
+  opacity: 1;
 }
 
 .upload-btn {
-  background-color: #abc32f;
-  color: #fff;
-  padding: 0.5rem 1.25rem;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap; 
+  flex-shrink: 0; 
+  transition: opacity 0.2s;
 }
-
 .upload-btn:hover {
-  background-color: #809c13;
+  opacity: 0.9;
 }
-
-#chat-container {
+.mode-select {
+  background: var(--panel-bg);
+  padding: 0.75rem 2rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-color-light);
 }
 
-.message {
-  padding: 0.75rem 1rem;
-  border-radius: 16px;
-  max-width: 75%;
-  word-wrap: break-word;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  display: inline-block;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.message-user {
-  background-color: #d1f0a5;
-  align-self: flex-end;
-  color: #1a1a1a;
-  border-top-right-radius: 0;
-}
-
-.message-bot {
-  background-color: #e0ffdf;
-  align-self: flex-start;
-  color: #1a1a1a;
-  border-top-left-radius: 0;
-}
-
-/* === Not Defteri === */
+/* === Not Defteri Paneli === */
 .notes-panel {
-  width: 250px;
-  background: #f6fdeb;
-  padding: 1rem;
-  border-left: 1px solid #ccc;
-  transition: transform 0.3s ease;
+    width: 320px;
+    background: var(--background-color);
+    padding: 0 1rem;
+    border-left: 1px solid var(--border-color);
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box;
+}
+.notes-panel.hidden { transform: translateX(100%); }
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    height: 64px;
+    box-sizing: border-box;
 }
 
-.notes-panel.hidden {
-  transform: translateX(100%);
+.notes-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color-dark);
+}
+#addNoteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    display: flex;
+}
+#addNoteBtn:hover {
+    background-color: var(--primary-color-light);
 }
 
-.note-list textarea {
-  width: 100%;
-  border: 1px solid #ccc;
-  background: #fff;
-  padding: 0.5rem;
-  border-radius: 4px;
-  resize: none;
-  margin-bottom: 0.5rem;
+.note-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.notes-toggle {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #ececa3;
-  border: none;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
+.note {
+    background: var(--panel-bg);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    position: relative;
 }
 
-.notes-toggle:hover {
-  background: #b5e550;
+.delete-note-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color-light);
+    opacity: 0.5;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    padding: 0.25rem;
 }
+.note:hover .delete-note-btn {
+    opacity: 1;
+}
+.delete-note-btn:hover {
+    color: #dc3545; /* Kırmızı */
+}
+
+.note-content {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 0;
+    resize: vertical;
+    min-height: 80px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-color-dark);
+}
+.note-content:focus { outline: none; }
+
+/* === Paneli Aç/Kapat Butonu === */
+#toggleNotes.notes-toggle {
+    position: fixed;
+    top: 12px; /* Header ile aynı hizada olması için */
+    right: 1rem;
+    background: var(--primary-color-light);
+    color: var(--primary-color);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+#toggleNotes.notes-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow);
+}
+
 
 /* === Pomodoro Widget === */
 .pomodoro-floating {
   position: fixed;
-  top: 100px;
-  left: 100px;
-  width: 280px;
-  height: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  top: 80px;
+  left: 90px;
+  width: 240px;
+  background: var(--panel-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   z-index: 999;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--border-color);
 }
 
-.pomodoro-floating.hidden {
-  display: none;
-}
+.pomodoro-floating.hidden { display: none; }
 
 .pomodoro-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f0fdf4;
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid #ccc;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
   cursor: move;
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--text-color-dark);
 }
+.pomodoro-header button { background: none; border: none; cursor: pointer; color: var(--text-color-light); }
 
 .pomodoro-body {
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
 .pomodoro-select {
-  margin-bottom: 1rem;
-  padding: 0.4rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
 }
 
 .pomodoro-timer {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #2563eb;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  font-family: 'Courier New', Courier, monospace;
 }
 
+#pomodoroStartBtn {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+#pomodoroStartBtn:hover {
+  opacity: 0.9;
+}

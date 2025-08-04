@@ -17,106 +17,108 @@
   </style>
 </head>
 <body>
-  <!-- Başlık -->
   <header class="header">
     <span id="headerTitle">AI Ders Asistanı</span>
   </header>
 
-  <!-- Ana yapı -->
   <div class="container">
-    <!-- SOL: Sohbetler -->
     <aside class="left-sidebar sidebar sidebar transition-all" id="sidebar">
       <div class="sidebar-buttons">
-            <!-- Sidebar toggle en sağda ve farklı -->
-        <div class="toggle-wrapper">
-          <button id="toggleSidebar" class="menu-icon toggle-icon">☰</button>
+            <div class="toggle-wrapper">
+          <button id="toggleSidebar" class="menu-icon toggle-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
         </div>
-        <!-- Menü ikonları -->
         <div class="menu-group">
           <div class="menu-item">
-            <button onclick="startNewChat()" class="menu-icon">＋</button>
+            <button onclick="startNewChat()" class="menu-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
             <span class="menu-label new-chat-label">Yeni Sohbet</span>
           </div>
           <div class="menu-item">
-            <button onclick="togglePomodoroWidget()" class="menu-icon">🍅</button>
+            <button onclick="togglePomodoroWidget()" class="menu-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </button>
             <span class="menu-label">Pomodoro</span>
-          </div>
-          <div class="menu-item">
-            <button class="menu-icon">📁</button>
-            <span class="menu-label">Dosyalar</span>
-          </div>
-          <div class="menu-item">
-            <button class="menu-icon">⚙️</button>
-            <span class="menu-label">Ayarlar</span>
           </div>
         </div>
       </div>
-      <!-- Sohbet listesi -->
       <h3 class="chat-header">Sohbetler</h3>
       <ul id="chatList" class="chat-list"></ul>
-      <!-- Kullanıcı -->
       <div class="user-section">
-        <button class="menu-icon">👤</button>
+        <button class="menu-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
         <span class="menu-label">busra</span>
       </div>
     </aside>
 
-    <!-- ORTA: Ana içerik -->
     <main class="main">
 
-      <!-- Başlık -->
       <h2 id="chatTitle" class="chat-title">
         Yeni Sohbet
-        <button onclick="clearChat()">🗑️ Sil</button>
+        <button onclick="clearChat()" title="Sohbeti Temizle">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+        </button>
       </h2>
 
-      <!-- Mesajlar -->
-      <div id="chat-container" class="chat-container p-4 flex flex-col space-y-2 overflow-y-auto h-full"></div>
+      <div id="chat-container" class="chat-container"></div>
 
-      <!-- Başlangıç mesajı -->
       <div id="startPrompt" class="start-prompt">Bugün ne çalışmak istersin?</div>
 
-      <!-- Soru girişi ve dosya yükleme entegre -->
       <section class="interaction-panel">
         <form id="uploadForm" enctype="multipart/form-data">
           <div class="input-row">
             <input type="text" id="questionInput" placeholder="Sorunuzu yazın..." />
             <button id="askButton" type="button">Gönder</button>
             <label title="Dosya Ekle" class="upload-icon">
-              📎
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
               <input type="file" id="fileInput" name="files" multiple />
             </label>
           </div>
-
-          <ul id="uploadedFiles" class="uploaded-list"></ul>
-
-          <button type="submit" class="upload-btn">Yükle</button>
+          <div class="file-upload-area">
+            <ul id="uploadedFiles" class="uploaded-list">
+              </ul>
+            <button type="submit" class="upload-btn">Yükle</button>
+          </div>
         </form>
       </section>
-      <!-- Mod seçimi -->
       <section class="mode-select">
         <label><input id="modeRetrieval" type="radio" name="mode" checked /> Kaynaklarımı Kullan</label>
         <label><input id="modeGeneral" type="radio" name="mode" /> Genel Bilgi Yaklaşımı</label>
       </section>
     </main>
 
-    <!-- SAĞ: Not Defteri -->
     <aside id="notesPanel" class="notes-panel hidden">
-      <h2>
-        Not Defteri
-        <button onclick="addEmptyNote()">＋</button>
-      </h2>
-      <div id="noteList" class="note-list"></div>
+        <div class="notes-header">
+            <h2>Not Defteri</h2>
+            <button id="addNoteBtn" onclick="addEmptyNote()" title="Yeni Not Ekle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+        </div>
+        <div id="noteList" class="note-list">
+          <div class="note">
+              <button class="delete-note-btn" title="Notu Sil">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+              <textarea class="note-content" placeholder="Kısa bir not alın..."></textarea>
+          </div>
+          </div>
     </aside>
+
   </div>
 
-  <button id="toggleNotes" class="notes-toggle">📝</button>
+  <button id="toggleNotes" class="notes-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </button>
 
-  <!--- POMODORO WIDGET --->
   <div id="pomodoroWidget" class="pomodoro-floating hidden">
     <div class="pomodoro-header">
-      <span>Pomodoro Zamanlayıcı</span>
-      <button onclick="closePomodoroWidget()">✖</button>
+      <span>Pomodoro</span>
+      <button onclick="closePomodoroWidget()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
     <div class="pomodoro-body">
       <select id="pomodoroDuration" class="pomodoro-select">
@@ -125,7 +127,7 @@
         <option value="600">10 dakika</option>
       </select>
       <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
-      <button onclick="startCustomPomodoro()" class="bg-blue-600 text-white px-3 py-1 rounded text-sm mt-2">Başlat</button>
+      <button onclick="startCustomPomodoro()" id="pomodoroStartBtn">Başlat</button>
     </div>
   </div>
 
