@@ -3,7 +3,6 @@
 **ILTEACH**, öğrencilerin kendi yüklediği içeriklerden öğrenebileceği etkileşimli bir yapay zekâ asistanıdır.  
 
 🌟 Temel fikir:  
-> Tıpkı bir sınav öncesinde bir arkadaşımızın bize konuyu sohbetle anlatması gibi, kişiselleştirilmiş, sade ve etkileşimli bir öğrenme ortamı sunmak.
 
 ---
 
@@ -44,3 +43,8 @@ echo "GOOGLE_API_KEY=YOUR_API_KEY_HERE" > .env
 
 # Uygulamayı başlatın
 python app.py
+```
+
+## 👾 AUTHOR: Mine Büşra HAZER
+
+**Medium Yazısı:** [  Yazıyı Medium’da Görüntüle](https://medium.com/@busrahazer/sohbet-ederek-%C3%B6%C4%9Frenmenin-g%C3%BCc%C3%BC-ilteach-ile-etkile%C5%9Fimli-ders-deneyimi-b9522711ac91)
