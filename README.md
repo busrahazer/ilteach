@@ -45,6 +45,8 @@ echo "GOOGLE_API_KEY=YOUR_API_KEY_HERE" > .env
 python app.py
 ```
 
-## 👾 AUTHOR: Mine Büşra HAZER
+## 👾 Mine Büşra HAZER
 
-**Medium Yazısı:** [  Yazıyı Medium’da Görüntüle](https://medium.com/@busrahazer/sohbet-ederek-%C3%B6%C4%9Frenmenin-g%C3%BCc%C3%BC-ilteach-ile-etkile%C5%9Fimli-ders-deneyimi-b9522711ac91)
+**Projeyi daha detaylı anlattığım Medium yazımı incelemek isterseniz:**
+
+[Sohbet Ederek Öğrenmenin Gücü: ILTeach ile Etkileşimli Ders Deneyimi](https://medium.com/@busrahazer/sohbet-ederek-%C3%B6%C4%9Frenmenin-g%C3%BCc%C3%BC-ilteach-ile-etkile%C5%9Fimli-ders-deneyimi-b9522711ac91)
