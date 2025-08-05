@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ILTEACH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
   <link rel="shortcut icon" href="{{ url_for('static', filename='img-icon/logo.ico') }}" type="image/x-icon">
   <link rel="stylesheet" href="/static/ui.css">
   <style>
@@ -17,8 +18,15 @@
   </style>
 </head>
 <body>
-  <header class="header">
-    <span id="headerTitle">AI Ders Asistanı</span>
+  
+  <header class="main-header">
+    <div class="header-content-horizontal">
+      <img src="{{ url_for('static', filename='img-icon/logo.png') }}" alt="ILTeach Logo" class="header-logo" />
+      <div class="header-text">
+        <h1 class="header-title">ILTEACH</h1>
+        <p class="header-subtitle">Interactive Lesson Teaching</p>
+      </div>
+    </div>
   </header>
 
   <div class="container">
@@ -50,7 +58,7 @@
         <button class="menu-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </button>
-        <span class="menu-label">busra</span>
+        <span class="menu-label">Mine Büşra Hazer</span>
       </div>
     </aside>
 

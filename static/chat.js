@@ -248,10 +248,7 @@ window.loadChatFromLocal = function (chatId) {
 };
 
 function updateHeaderTitle(title) {
-  const headerTitle = document.getElementById('headerTitle');
-  if (headerTitle) {
-    headerTitle.textContent = title || 'AI Ders Asistanı';
-  }
+  
 }
 
 window.updateChatList = function () {

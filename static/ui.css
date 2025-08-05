@@ -1,6 +1,6 @@
 /* === Genel Temalar ve Değişkenler === */
 :root {
-    --primary-color: #7c3aed; /* Referans görseldeki ana mor renk */
+    --primary-color: #7c3aed		; /* Referans görseldeki ana mor renk */
     --primary-color-light: #f5f3ff; /* Mor rengin çok açık tonu */
     --background-color: #f7f8fc;  /* Ana arka plan rengi */
     --panel-bg: #ffffff; /* Kenar çubuğu, panel vb. arka planı */
@@ -24,16 +24,50 @@ body {
   overflow: hidden;
 }
 
-header.header {
-  background: var(--panel-bg);
+/* === Başlık === */
+.main-header {
+  background-color: var(--primary-color-light);
   color: var(--text-color-dark);
-  padding: 1rem;
-  text-align: center;
-  font-size: 1.25rem;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.8px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.header-content-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo {
+  width: 47px;
+  height: 47px;
+  object-fit: contain;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.header-title {
+  font-size: 1.5rem;
   font-weight: 600;
-  border-bottom: 1px solid var(--border-color);
-  height: 64px;
-  box-sizing: border-box;
+  margin: 0;
+  color: #b39ddb;
+  font-family: 'Poppins', sans-serif;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-color-light);
+  margin: 0;
+  font-style: italic;
 }
 
 /* === Sol Kenar Çubuğu (Sidebar) === */
@@ -156,7 +190,24 @@ header.header {
 
 .user-section {
   padding: 1.5rem 0;
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 1rem;
+  padding-left: 28px; 
+  font-size: 1.25rem;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.3s, background-color 0.3s;
+  color: var(--text-color-dark);
 }
+
+.left-sidebar:not(.sidebar-expanded) .user-section {
+  justify-content: center; 
+  padding-left: 0;
+}
+
 .left-sidebar:not(.sidebar-expanded) .chat-header,
 .left-sidebar:not(.sidebar-expanded) .chat-list,
 .left-sidebar:not(.sidebar-expanded) .menu-label {
