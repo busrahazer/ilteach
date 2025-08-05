@@ -159,68 +159,85 @@ window.askQuestion = function () {
   const question = questionInput.value.trim();
   if (!question) return;
 
+  const mode = document.getElementById('modeRetrieval')?.checked ? 'retrieval' : 'general';
+
+  // "not al" veya "kaydet" gibi komutları kontrol et
+  if (question.toLowerCase().includes('not al') || question.toLowerCase().includes('kaydet')) {
+    // Özel bir not alma isteği gönder
+    fetch('/take-note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: question, chatId: currentChatId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.noteContent) {
+        autoSaveNote(data.noteContent);
+        appendMessage('bot', 'Notunuz başarıyla kaydedildi.');
+      } else {
+        appendMessage('bot', data.error || 'Not alınamadı.');
+      }
+    })
+    .catch(err => {
+      console.error('Not alma hatası:', err);
+      appendMessage('bot', 'Not alma sırasında bir hata oluştu.');
+    });
+
+    questionInput.value = '';
+    return;
+  }
+
+  // Normal sohbet akışı devam ediyor
   appendMessage('user', question);
   questionInput.value = '';
-
   hideStartPrompt();
-
-  const mode = document.getElementById('modeRetrieval')?.checked ? 'retrieval' : 'general';
 
   fetch('/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ question, mode })
   })
-    .then(async response => {
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Sunucu hatası: ${response.status} - ${text}`);
-      }
-      return response.json();
-    })
-    .then(async data => {
-      const answer = data.answer || data.error || "Yanıt alınamadı.";
-      appendMessage('bot', answer);
+  .then(async response => {
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Sunucu hatası: ${response.status} - ${text}`);
+    }
+    return response.json();
+  })
+  .then(async data => {
+    const answer = data.answer || data.error || "Yanıt alınamadı.";
+    appendMessage('bot', answer);
 
-      if (!currentChatId) {
-        // İlk soru → Başlık için AI çağrısı yap
-        currentChatId = generateChatId();
-
-        let title = smartTitleFromMessage(question); // varsayılan
-        try {
-          const res = await fetch('/generate-title', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question, answer })
-          });
-          if (res.ok) {
-            const json = await res.json();
-            if (json.title) title = json.title;
-          }
-        } catch (err) {
-          console.warn("Başlık üretilemedi, varsayılan kullanılacak:", err);
+    if (!currentChatId) {
+      currentChatId = generateChatId();
+      let title = smartTitleFromMessage(question);
+      try {
+        const res = await fetch('/generate-title', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question, answer })
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.title) title = json.title;
         }
-
-        saveChatToLocal(currentChatId, title, [{ q: question, a: answer }]);
-        updateHeaderTitle(title);
-      } else {
-        const existing = JSON.parse(localStorage.getItem(`chat-${currentChatId}`));
-        existing.messages.push({ q: question, a: answer });
-
-        // başlık güncelleme yok — sadece ilk mesajdan başlık üretiliyor
-        saveChatToLocal(currentChatId, existing.title, existing.messages);
-        updateHeaderTitle(existing.title);
+      } catch (err) {
+        console.warn("Başlık üretilemedi, varsayılan kullanılacak:", err);
       }
+      saveChatToLocal(currentChatId, title, [{ q: question, a: answer }]);
+      updateHeaderTitle(title);
+    } else {
+      const existing = JSON.parse(localStorage.getItem(`chat-${currentChatId}`));
+      existing.messages.push({ q: question, a: answer });
+      saveChatToLocal(currentChatId, existing.title, existing.messages);
+      updateHeaderTitle(existing.title);
+    }
 
-      updateChatList();
-      localStorage.setItem('lastChatId', currentChatId);
-      loadNotes(currentChatId);
-    })
+    updateChatList();
+    localStorage.setItem('lastChatId', currentChatId);
+    loadNotes(currentChatId);
+  });
 };
-
-function generateChatId() {
-  return 'chat-' + Date.now();
-}
 
 window.saveChatToLocal = function (chatId, title, messages) {
   localStorage.setItem(`chat-${chatId}`, JSON.stringify({ title, messages }));
@@ -320,29 +337,13 @@ window.loadNotes = function (chatId) {
 
   notes.forEach((note, index) => {
     const div = document.createElement('div');
-    div.className = 'bg-white border border-gray-200 rounded p-3 shadow-sm relative';
-
-    // Başlık alanı
-    const titleInput = document.createElement('input');
-    titleInput.type = 'text';
-    titleInput.value = note.title || '';
-    titleInput.className = 'note-title w-full font-semibold text-gray-800 mb-1';
-    titleInput.placeholder = 'Başlık';
-    titleInput.addEventListener('input', () => {
-      notes[index].title = titleInput.value;
-      localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
-    });
-
-    // Zaman bilgisi
-    const time = document.createElement('div');
-    time.textContent = new Date(note.created).toLocaleString('tr-TR');
-    time.className = 'text-xs text-gray-500 mb-1';
+    div.className = 'note';
 
     // İçerik alanı
     const textarea = document.createElement('textarea');
     textarea.value = note.content || '';
-    textarea.className = 'note-content w-full resize-none text-sm';
-    textarea.rows = 3;
+    textarea.className = 'note-content';
+    textarea.placeholder = 'Kısa bir not alın...';
     textarea.addEventListener('input', () => {
       notes[index].content = textarea.value;
       localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
@@ -350,17 +351,15 @@ window.loadNotes = function (chatId) {
 
     // Silme butonu
     const delBtn = document.createElement('button');
-    delBtn.textContent = '✖';
     delBtn.title = 'Notu Sil';
-    delBtn.className = 'absolute top-1 right-1 text-red-600 text-sm';
+    delBtn.className = 'delete-note-btn';
+    delBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
     delBtn.onclick = () => {
       notes.splice(index, 1);
       localStorage.setItem(`notes-${chatId}`, JSON.stringify(notes));
       loadNotes(chatId);
     };
 
-    div.appendChild(titleInput);
-    div.appendChild(time);
     div.appendChild(textarea);
     div.appendChild(delBtn);
     noteList.appendChild(div);
@@ -383,12 +382,16 @@ function clearNotesUI() {
   noteList.innerHTML = '';
 }
 
-function autoSaveNote(text) {
+window.autoSaveNote = function (noteContent) {
   if (!currentChatId) return;
   const notes = JSON.parse(localStorage.getItem(`notes-${currentChatId}`)) || [];
-  notes.push(text);
+  const timestamp = new Date().toISOString();
+  notes.push({ content: noteContent, created: timestamp });
   localStorage.setItem(`notes-${currentChatId}`, JSON.stringify(notes));
   loadNotes(currentChatId);
+};
+function generateChatId() {
+  return 'chat-' + Date.now();
 }
 
 // Pomodoro widget

@@ -171,7 +171,37 @@ def chat():
     except Exception as e:
         return jsonify({'error': f'İşlem sırasında hata: {str(e)}'}), 500
 
-# --- 9. Chat Name ---
+# --- 9.  Not Alma API ---
+@app.route('/take-note', methods=['POST'])
+def take_note():
+    global chat_history
+    data = request.get_json()
+    command = data.get('command', '').strip()
+
+    if not chat_history:
+        return jsonify({'error': 'Sohbet geçmişi boş, not alınacak bir şey yok.'}), 400
+
+    # En son yapay zeka yanıtını al
+    last_bot_answer = chat_history[-1][1]
+
+    try:
+        # LLM'ye not içeriğini özetlemesi için bir talimat ver
+        prompt = f"""Aşağıdaki metni, bir ders notu formatında, ana fikirleri koruyarak 1-2 cümlelik kısa bir not haline getir.
+        
+        Metin: {last_bot_answer}
+        
+        Not:"""
+
+        llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.2)
+        response = llm.invoke(prompt)
+        note_content = response.content.strip()
+
+        return jsonify({'noteContent': note_content}), 200
+
+    except Exception as e:
+        return jsonify({'error': f'Not alınırken hata oluştu: {str(e)}'}), 500
+    
+# --- 10. Chat Name ---
 @app.route('/generate-title', methods=['POST'])
 def generate_title():
     data = request.get_json()
@@ -198,6 +228,6 @@ def generate_title():
     except Exception as e:
         return jsonify({'error': f'Başlık oluşturulurken hata: {str(e)}'}), 500
 
-# --- 10. Start APP ---
+# --- Start APP ---
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
