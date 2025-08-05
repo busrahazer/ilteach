@@ -1,13 +1,13 @@
 /* === Genel Temalar ve Değişkenler === */
 :root {
-    --primary-color: #7c3aed		; /* Referans görseldeki ana mor renk */
-    --primary-color-light: #f5f3ff; /* Mor rengin çok açık tonu */
-    --background-color: #f7f8fc;  /* Ana arka plan rengi */
-    --panel-bg: #ffffff; /* Kenar çubuğu, panel vb. arka planı */
-    --text-color-dark: #111827; /* Koyu metin */
-    --text-color-light: #6b7280; /* Açık, ikincil metin */
-    --border-color: #e5e7eb; /* İnce ve soft kenarlıklar */
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Yumuşak gölge */
+    --primary-color: #7c3ae9; 
+    --primary-color-light: #f5f3ff; 
+    --background-color: #f7f8fc;  
+    --panel-bg: #ffffff; 
+    --text-color-dark: #111827; 
+    --text-color-light: #6b7280; 
+    --border-color: #e5e7eb; 
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
 }
 
 /* === Temel Sayfa Ayarları === */
