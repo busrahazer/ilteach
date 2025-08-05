@@ -168,6 +168,7 @@ header.header {
   flex: 1;
   display: flex;
   flex-direction: column;
+  transition: flex-grow 0.3s ease;
 }
 
 .chat-title {
@@ -391,15 +392,33 @@ header.header {
 
 /* === Not Defteri Paneli === */
 .notes-panel {
-    width: 320px;
-    background: var(--background-color);
-    padding: 0 1rem;
-    border-left: 1px solid var(--border-color);
-    transition: transform 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    box-sizing: border-box;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+  background: var(--background-color);
+  padding: 0 1rem;
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.notes-panel:not(.hidden) {
+  width: 320px;
+  padding: 0 1rem;
+}
+
+
+.notes-panel:not(.hidden) + .main {
+  flex-grow: 1; 
+}
+
+#toggleNotes.notes-toggle {
+    position: absolute; 
+    right: 1rem;
+    top: 1rem;
+    z-index: 1000;
 }
 .notes-panel.hidden { transform: translateX(100%); }
 
